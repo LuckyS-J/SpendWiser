@@ -33,10 +33,11 @@ CATEGORY_KEYWORDS = {
     }
 }
 
+
 def assign_category(title):
-  title = title.lower()
-  for category, data in CATEGORY_KEYWORDS.items():
-    for keyword in data['keywords']:
-      if keyword in title:
-        return category
-  return 'other'
+    title = title.lower()
+    for category, data in CATEGORY_KEYWORDS.items():
+        for keyword in data['keywords']:
+            if keyword in title:
+                return category
+    return 'other'

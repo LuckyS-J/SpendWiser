@@ -47,8 +47,6 @@ class TransactionListCreateView(APIView):
         data['date'] = date_obj
         type = 'income' if int(data['amount']) >= 0 else 'expense'
 
-        print(data)
-
         serializer = TransactionSerializer(data=data)
 
         if serializer.is_valid():

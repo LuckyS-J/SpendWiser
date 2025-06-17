@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserRegistrationSerializer, UserProfileSerializer
+from django.views import View
 
 # Create your views here.
 
@@ -34,4 +35,10 @@ class ApiProfileView(APIView):
             return Response(serializer.data, status=200)
         else:
             return Response(serializer.errors, status=400)
+        
+#----------------------------------------#
+
+class HomeView(View):
+    def get(self, request):
+        return render(request, 'core/index.html')
 

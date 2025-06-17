@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h2 class="mb-4">Welcome back, {{ user.username }}!</h2>
+
+<div class="row g-4">
+  <!-- Balance Summary -->
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Your Current Balance</h5>
+        <p class="display-6">
+          {{ balance|default:"0.00" }} PLN
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Transactions -->
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Recent Transactions</h5>
+        {% if transactions %}
+        <ul class="list-group list-group-flush">
+          {% for transaction in transactions %}
+          <li class="list-group-item bg-transparent text-light d-flex justify-content-between">
+            {{ transaction.title }}
+            <span>{{ transaction.amount }} PLN</span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">No transactions yet.</p>
+        {% endif %}
+        <a href="" class="btn btn-outline-light mt-3">View All</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="mt-5 text-center">
+  <a href="" class="btn btn-primary me-2">Add Transaction</a>
+  <a href="" class="btn btn-outline-light">Sync with Bank</a>
+</div>
+
+{% else %}
+<!-- Guest View -->
+<div class="text-center my-5">
+  <h1 class="display-4">Manage Your Finances Smarter</h1>
+  <p class="lead">Track spending, categorize transactions, and stay in control of your money with SpendWise.</p>
+  <a href="" class="btn btn-primary me-2">Log In</a>
+  <a href="" class="btn btn-outline-light">Create Account</a>
+</div>
+{% endif %}
+{% endblock %}
