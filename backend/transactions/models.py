@@ -15,6 +15,8 @@ class Transaction(models.Model):
         ('education', 'Education'),
         ('clothes', 'Clothes'),
         ('electronics', 'Electronics'),
+        ('entertainment', 'Entertainment'),
+        ('othealthher', 'Health'),
         ('other', 'Other'),
     ]
 
@@ -26,7 +28,7 @@ class Transaction(models.Model):
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name='transactions')
     title = models.CharField(max_length=100)
-    amount = models.DecimalField(validators=[MinValueValidator(0)], max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField(default=datetime.date.today)
     category = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
@@ -38,4 +40,3 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.title}, {self.amount}"
-
