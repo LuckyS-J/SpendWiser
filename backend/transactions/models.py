@@ -20,7 +20,7 @@ class Transaction(models.Model):
 
     TYPE_CHOICES = [
         ('expense', 'Expense'),
-        ('profit', 'Profit'),
+        ('income', 'Income'),
     ]
 
     user = models.ForeignKey(

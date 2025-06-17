@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import TransactionSerializer
 from .models import Transaction
+import json
+from django.conf import settings
+from datetime import datetime
 
 # Create your views here.
 
@@ -23,7 +26,7 @@ class TransactionListCreateView(APIView):
             serializer.save(user=request.user)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
-    
+
 
 class TransactionDetailView(APIView):
     permission_classes = [IsAuthenticated]
@@ -35,13 +38,55 @@ class TransactionDetailView(APIView):
 
     def put(self, request, id):
         transaction = get_object_or_404(Transaction, user=request.user, id=id)
-        serializer = TransactionSerializer(instance=transaction, data=request.data, partial=True)
+        serializer = TransactionSerializer(
+            instance=transaction, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=200)
         return Response(serializer.errors, status=400)
-    
+
     def delete(self, request, id):
         transaction = get_object_or_404(Transaction, user=request.user, id=id)
         transaction.delete()
-        return Response({'message':'Transaction deleted'}, status=204)
+        return Response({'message': 'Transaction deleted'}, status=204)
+
+
+class ImportTransactionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            with open(f'{settings.BASE_DIR}/data/sample_transactions.json') as file:
+                data = json.load(file)
+
+                count = 0
+                for transaction in data['transactions']:
+                    date_str = transaction['date']
+                    date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
+
+                    existing = Transaction.objects.filter(
+                        user=request.user,
+                        title=transaction['description'],
+                        amount=transaction['amount'],
+                        date=date_obj
+                    ).exists()
+
+                    if not existing:
+                        new_transaction = Transaction(
+                            user=request.user,
+                            title=transaction['description'],
+                            amount=transaction['amount'],
+                            date=date_obj,
+                            category='food',
+                            type='income' if transaction['amount'] >= 0 else 'expense',
+                        )
+                        new_transaction.save()
+                        count += 1
+                return Response(
+                    {'Message': f'Successfully loaded {count} transactions'},
+                    status=201,
+                    headers={'Content-Type': 'application/json; charset=utf-8'}
+                )
+
+        except FileNotFoundError:
+            return Response({'Message': 'File not found'}, status=404)
