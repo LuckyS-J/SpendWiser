@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Home page{% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
@@ -52,8 +52,8 @@
 <div class="text-center my-5">
   <h1 class="display-4">Manage Your Finances Smarter</h1>
   <p class="lead">Track spending, categorize transactions, and stay in control of your money with SpendWise.</p>
-  <a href="" class="btn btn-primary me-2">Log In</a>
-  <a href="" class="btn btn-outline-light">Create Account</a>
+  <a href="{% url 'login' %}" class="btn btn-primary me-2">Log In</a>
+  <a href="{% url 'register' %}" class="btn btn-outline-light">Create Account</a>
 </div>
 {% endif %}
 {% endblock %}

@@ -28,7 +28,16 @@
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="">Dashboard</a></li>
           <li class="nav-item"><a class="nav-link" href="">Add</a></li>
-          <li class="nav-item"><a class="nav-link" href="">Logout</a></li>
+          {% if user.is_authenticated %}
+            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none;">
+              {% csrf_token %}
+            </form>
+            <li class="nav-item">
+              <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                Logout
+              </a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>

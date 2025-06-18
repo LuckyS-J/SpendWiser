@@ -157,3 +157,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'BLACKLIST_AFTER_ROTATION': True,
 }
+
+# DEFAULT URLS
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'

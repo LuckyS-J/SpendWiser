@@ -4,6 +4,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserRegistrationSerializer, UserProfileSerializer
 from django.views import View
+from django.views.generic import CreateView
+from django.contrib.auth.views import LoginView
+from .forms import CustomRegisterForm, CustomLoginForm
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
@@ -38,7 +43,18 @@ class ApiProfileView(APIView):
         
 #----------------------------------------#
 
-class HomeView(View):
+class HomeView(LoginRequiredMixin, View):
+
     def get(self, request):
         return render(request, 'core/index.html')
+    
+class CustomLoginView(LoginView):
+    template_name = 'core/login.html'
+    form_class = CustomLoginForm
+
+class CustomRegisterView(CreateView):
+    form_class = CustomRegisterForm
+    template_name = 'core/register.html'
+    success_url = reverse_lazy('login')
+
 

@@ -61,3 +61,30 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 0.2rem rgba(76, 137, 241, 0.25);
   outline: none;
 }
+
+.auth-text {
+  color: #cfd8e6;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.auth-link {
+  color: #7ab8ff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.auth-link:hover {
+  color: #a3c9ff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.text-danger {
+  color: #ff6b6b;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
