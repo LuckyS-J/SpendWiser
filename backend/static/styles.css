@@ -88,3 +88,34 @@ input:focus, select:focus, textarea:focus {
   font-size: 0.85rem;
   margin-top: 0.2rem;
 }
+
+.dark-table tbody tr {
+  background-color: rgba(8, 18, 30, 0.85); 
+  color: #d4d4dc;                         
+}
+
+.dark-table tbody tr:hover {
+  background-color: rgba(12, 34, 56, 0.9); 
+}
+
+.dark-table thead {
+  background-color: rgba(8, 18, 30, 0.95); 
+  color: #a9b9d9;                         
+}
+
+.dark-table td, .dark-table th {
+  border-color: rgba(24, 60, 96, 0.8);    
+}
+
+.dark-table th {
+  background-color: rgba(24, 60, 96, 0.9); 
+  color: #b0c1e5;                         
+  border-color: rgba(24, 60, 96, 0.9);
+}
+
+.dark-table td {
+  background-color: rgba(18, 36, 56, 0.85);
+  color: #d4d4dc;                         
+  border-color: rgba(24, 60, 96, 0.8);
+}
+

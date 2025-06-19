@@ -27,6 +27,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'transactions-list' %}">Transactions</a></li>
           <li class="nav-item"><a class="nav-link" href="">Add</a></li>
           {% if user.is_authenticated %}
             <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none;">

@@ -8,6 +8,7 @@ import json
 from django.conf import settings
 from datetime import datetime
 from .utils import assign_category
+from django.views import View
 
 # Create your views here.
 
@@ -114,3 +115,29 @@ class ImportTransactionView(APIView):
 
         except FileNotFoundError:
             return Response({'Message': 'File not found'}, status=404)
+
+
+class TransactionListView(View):
+    def get(self, request):
+
+        transactions = Transaction.objects.filter(user=request.user)
+        categories = Transaction.CATEGORY_CHOICES
+
+        category = request.GET.get('category')
+        sort = request.GET.get('sort', '-date')
+        transaction_type = request.GET.get('type')
+
+        if transaction_type in ['expense', 'income']:
+            transactions = transactions.filter(type=transaction_type)
+
+        if category:
+            transactions = transactions.filter(category=category)
+
+        allowed_sort_fields = ['date', '-date', 'amount', '-amount']
+        if sort in allowed_sort_fields:
+            transactions = transactions.order_by(sort)
+
+        return render(request, 'transactions/transactions_list.html', {
+            'transactions': transactions,
+            'categories': categories
+        })

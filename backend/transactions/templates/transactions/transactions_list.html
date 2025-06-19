@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Your Transactions{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">All Transactions</h2>
+
+<!-- Filter & Sort Form -->
+<form method="get" class="row g-3 mb-4 align-items-end">
+  <div class="col-md-3">
+    <label for="category" class="form-label">Filter by Category</label>
+    <select name="category" id="category" class="form-select">
+      <option value="">All</option>
+      {% for code, name in categories %}
+        <option value="{{ code }}" {% if request.GET.category == code %}selected{% endif %}>{{ name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  
+  <div class="col-md-3">
+    <label for="sort" class="form-label">Sort by</label>
+    <select name="sort" id="sort" class="form-select">
+      <option value="-date" {% if request.GET.sort == "-date" %}selected{% endif %}>Newest First</option>
+      <option value="date" {% if request.GET.sort == "date" %}selected{% endif %}>Oldest First</option>
+      <option value="-amount" {% if request.GET.sort == "-amount" %}selected{% endif %}>Highest Amount</option>
+      <option value="amount" {% if request.GET.sort == "amount" %}selected{% endif %}>Lowest Amount</option>
+    </select>
+  </div>
+  
+  <div class="col-md-3">
+    <label for="type" class="form-label">Filter by Type</label>
+    <select name="type" id="type" class="form-select">
+      <option value="">All</option>
+      <option value="expense" {% if request.GET.type == "expense" %}selected{% endif %}>Expenses</option>
+      <option value="income" {% if request.GET.type == "income" %}selected{% endif %}>Income</option>
+    </select>
+  </div>
+  
+  <div class="col-md-3">
+    <button type="submit" class="btn btn-primary w-100">Apply</button>
+  </div>
+</form>
+
+
+
+<!-- Transactions Table -->
+<div class="card shadow-sm">
+  <div class="card-body">
+    {% if transactions %}
+<table class="table dark-table align-middle mb-0">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Title</th>
+      <th>Amount</th>
+      <th>Category</th>
+      <th>Type</th>
+      <th class="text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in transactions %}
+    <tr>
+      <td>{{ t.date }}</td>
+      <td>{{ t.title }}</td>
+      <td>
+        {% if t.type == 'expense' %}
+          <span class="text-danger">{{ t.amount }} PLN</span>
+        {% else %}
+          <span class="text-success">+{{ t.amount }} PLN</span>
+        {% endif %}
+      </td>
+      <td>{{ t.get_category_display }}</td>
+      <td>{{ t.get_type_display }}</td>
+      <td class="text-center">
+        <a href="" class="btn btn-sm btn-primary">Details</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+    {% else %}
+    <p class="text-muted">No transactions to show.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
