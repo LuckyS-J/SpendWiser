@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Charts{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Expenses charts</h2>
+
+
+<div style="max-width: 450px; margin: 0 auto 60px; text-align: center; color: white;">
+  <h3 style="margin-bottom: 1rem;">Expenses by Category</h3>
+  <canvas id="categoryChart"></canvas>
+  <div id="categoryLegend" style="margin-top: 15px; text-align: left;"></div>
+</div>
+
+
+<div style="max-width: 1100px; margin: 0 auto 60px; text-align: center; color: white;">
+  <h3 style="margin-bottom: 1rem;">Expenses Over Time</h3>
+  <canvas id="dateChart"></canvas>
+</div>
+
+{{ category_labels|json_script:"cat_labels" }}
+{{ category_values|json_script:"cat_values" }}
+{{ category_colors|json_script:"cat_colors" }}
+{{ date_labels|json_script:"date_labels" }}
+{{ date_values|json_script:"date_values" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const categoryLabels = JSON.parse(document.getElementById('cat_labels').textContent);
+  const categoryValuesRaw = JSON.parse(document.getElementById('cat_values').textContent);
+  const categoryValues = categoryValuesRaw.map(v => Math.abs(v));
+  const categoryColors = JSON.parse(document.getElementById('cat_colors').textContent);
+  const dateLabels = JSON.parse(document.getElementById('date_labels').textContent);
+  const dateValuesRaw = JSON.parse(document.getElementById('date_values').textContent);
+  const dateValues = dateValuesRaw.map(v => Math.abs(v));
+
+
+  const categoryChart = new Chart(document.getElementById('categoryChart').getContext('2d'), {
+    type: 'pie',
+    data: {
+      labels: categoryLabels,
+      datasets: [{
+        data: categoryValues,
+        backgroundColor: categoryColors
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        title: { display: false },
+        tooltip: {
+          callbacks: {
+            label: context => `${context.label}: ${context.parsed} zł`
+          }
+        }
+      }
+    }
+  });
+
+
+  const legendContainer = document.getElementById('categoryLegend');
+  categoryLabels.forEach((label, i) => {
+    const color = categoryColors[i];
+    const value = categoryValues[i];
+    const item = document.createElement('div');
+    item.style.display = 'flex';
+    item.style.alignItems = 'center';
+    item.style.marginBottom = '6px';
+
+    const box = document.createElement('span');
+    box.style.display = 'inline-block';
+    box.style.width = '18px';
+    box.style.height = '18px';
+    box.style.backgroundColor = color;
+    box.style.marginRight = '8px';
+    box.style.borderRadius = '4px';
+
+    const text = document.createElement('span');
+    text.style.color = 'white';
+    text.style.fontSize = '14px';
+    text.textContent = `${label}: ${value} zł`;
+
+    item.appendChild(box);
+    item.appendChild(text);
+    legendContainer.appendChild(item);
+  });
+
+
+  new Chart(document.getElementById('dateChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: dateLabels,
+      datasets: [{
+        label: 'Expenses Over Time',
+        data: dateValues,
+        backgroundColor: '#42a5f5'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          ticks: {
+            callback: v => `${v} zł`,
+            color: 'white'
+          },
+          grid: { color: '#333' }
+        },
+        x: {
+          ticks: {
+            color: 'white',
+            autoSkip: false,
+            maxRotation: 45,
+            minRotation: 45,
+                  font: {
+                    size: 16
+                  }
+          },
+          grid: { color: '#333' }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        title: { display: false },
+        tooltip: {
+          callbacks: {
+            label: context => `${context.dataset.label}: ${context.parsed.y} zł`
+          }
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}

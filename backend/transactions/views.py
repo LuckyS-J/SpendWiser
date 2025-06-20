@@ -10,6 +10,10 @@ from datetime import datetime
 from .utils import assign_category
 from django.views import View
 from .forms import TransactionForm
+from django.db.models import Sum
+from django.db.models.functions import TruncWeek
+from datetime import timedelta
+from .utils import CATEGORY_KEYWORDS
 
 # Create your views here.
 
@@ -198,3 +202,37 @@ class AddTransactionView(View):
             transaction.save()
             return redirect('transactions-list')
         return render(request, 'transactions/transaction_edit.html', {'form': form})
+
+class ChartsView(View):
+    def get(self, request):
+        user = request.user
+
+        category_data = (
+            Transaction.objects.filter(user=user, type='expense')
+            .values('category')
+            .annotate(total=Sum('amount'))
+        )
+
+        weekly_data = (
+            Transaction.objects.filter(user=user, type='expense')
+            .annotate(week=TruncWeek('date'))
+            .values('week')
+            .annotate(total=Sum('amount'))
+            .order_by('week')
+        )
+
+        def format_week_range(week_start):
+            week_end = week_start + timedelta(days=6)
+            return f"{week_start.strftime('%d')}–{week_end.strftime('%d %b')}"
+
+        context = {
+            'category_labels': [c['category'].capitalize() for c in category_data],
+            'category_values': [float(c['total']) for c in category_data],
+            'category_colors': [
+                CATEGORY_KEYWORDS.get(c['category'], {}).get('color', '#cccccc') for c in category_data
+            ],
+            'date_labels': [format_week_range(entry['week']) for entry in weekly_data],
+            'date_values': [float(entry['total']) for entry in weekly_data],
+        }
+
+        return render(request, 'transactions/charts.html', context)
