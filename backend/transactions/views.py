@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -9,6 +9,7 @@ from django.conf import settings
 from datetime import datetime
 from .utils import assign_category
 from django.views import View
+from .forms import TransactionForm
 
 # Create your views here.
 
@@ -138,6 +139,43 @@ class TransactionListView(View):
             transactions = transactions.order_by(sort)
 
         return render(request, 'transactions/transactions_list.html', {
-            'transactions': transactions,
-            'categories': categories
+            'transactions':transactions,
+            'categories':categories
         })
+
+class TransactionDetailsView(View):
+
+    def get(self, request, id):
+        transaction = get_object_or_404(Transaction, id=id, user=request.user)
+
+        return render(request, 'transactions/transaction_details.html', {
+            'transaction':transaction
+        })
+
+class TransactionEditView(View):
+    def get(self, request, id):
+        transaction = get_object_or_404(Transaction, id=id, user=request.user)
+        form = TransactionForm(instance=transaction)
+        return render(request, 'transactions/transaction_edit.html', {
+            'transaction':transaction,
+            'form':form
+        })
+    
+    def post(self, request, id):
+        transaction = get_object_or_404(Transaction, id=id, user=request.user)
+        form = TransactionForm(request.POST, instance=transaction)
+        if form.is_valid():
+            form.save()
+            return redirect('transactions-list')
+        
+        return render(request, 'transactions/transaction_edit.html', {
+            'form': form,
+            'transaction': transaction
+        })
+    
+class DeleteTransactionView(View):
+    def post(self, request, id):
+        transaction = get_object_or_404(Transaction, id=id, user=request.user)
+        transaction.delete()
+        return redirect('transactions-list')
+

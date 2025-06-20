@@ -36,6 +36,12 @@ class Transaction(models.Model):
     def save(self, *args, **kwargs):
         if self.date > datetime.date.today() or self.date.year < 2000:
             raise ValueError("Invalid date")
+        
+        if self.amount >= 0:
+            self.type = 'income'
+        else:
+            self.type = 'expense'
+            
         super().save(*args, **kwargs)
 
     def __str__(self):

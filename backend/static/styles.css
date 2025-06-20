@@ -89,6 +89,12 @@ input:focus, select:focus, textarea:focus {
   margin-top: 0.2rem;
 }
 
+.text-success {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
 .dark-table tbody tr {
   background-color: rgba(8, 18, 30, 0.85); 
   color: #d4d4dc;                         
