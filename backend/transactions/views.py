@@ -139,9 +139,10 @@ class TransactionListView(View):
             transactions = transactions.order_by(sort)
 
         return render(request, 'transactions/transactions_list.html', {
-            'transactions':transactions,
-            'categories':categories
+            'transactions': transactions,
+            'categories': categories
         })
+
 
 class TransactionDetailsView(View):
 
@@ -149,33 +150,51 @@ class TransactionDetailsView(View):
         transaction = get_object_or_404(Transaction, id=id, user=request.user)
 
         return render(request, 'transactions/transaction_details.html', {
-            'transaction':transaction
+            'transaction': transaction
         })
+
 
 class TransactionEditView(View):
     def get(self, request, id):
         transaction = get_object_or_404(Transaction, id=id, user=request.user)
         form = TransactionForm(instance=transaction)
         return render(request, 'transactions/transaction_edit.html', {
-            'transaction':transaction,
-            'form':form
+            'transaction': transaction,
+            'form': form
         })
-    
+
     def post(self, request, id):
         transaction = get_object_or_404(Transaction, id=id, user=request.user)
         form = TransactionForm(request.POST, instance=transaction)
         if form.is_valid():
             form.save()
             return redirect('transactions-list')
-        
+
         return render(request, 'transactions/transaction_edit.html', {
             'form': form,
             'transaction': transaction
         })
-    
+
+
 class DeleteTransactionView(View):
     def post(self, request, id):
         transaction = get_object_or_404(Transaction, id=id, user=request.user)
         transaction.delete()
         return redirect('transactions-list')
 
+
+class AddTransactionView(View):
+    def get(self, request):
+        form = TransactionForm()
+        return render(request, 'transactions/transaction_edit.html', {
+            'form': form
+        })
+
+    def post(self, request):
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            transaction = form.save(commit=False)
+            transaction.user = request.user
+            transaction.save()
+            return redirect('transactions-list')
+        return render(request, 'transactions/transaction_edit.html', {'form': form})

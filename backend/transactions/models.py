@@ -1,6 +1,5 @@
 from django.db import models
 from core.models import CustomUser
-from django.core.validators import MinValueValidator, MaxValueValidator
 import datetime
 
 # Create your models here.
@@ -16,7 +15,7 @@ class Transaction(models.Model):
         ('clothes', 'Clothes'),
         ('electronics', 'Electronics'),
         ('entertainment', 'Entertainment'),
-        ('othealthher', 'Health'),
+        ('health', 'Health'),
         ('other', 'Other'),
     ]
 
@@ -34,14 +33,11 @@ class Transaction(models.Model):
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
 
     def save(self, *args, **kwargs):
-        if self.date > datetime.date.today() or self.date.year < 2000:
-            raise ValueError("Invalid date")
-        
         if self.amount >= 0:
             self.type = 'income'
         else:
             self.type = 'expense'
-            
+
         super().save(*args, **kwargs)
 
     def __str__(self):

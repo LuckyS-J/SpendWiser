@@ -1,7 +1,9 @@
 from django.urls import path
 from .views import (
   TransactionDetailView, TransactionListCreateView, ImportTransactionView,
-  TransactionListView, TransactionDetailsView, TransactionEditView, DeleteTransactionView)
+  TransactionListView, TransactionDetailsView, TransactionEditView, DeleteTransactionView,
+  AddTransactionView
+  )
 
 urlpatterns = [
     path('api/', TransactionListCreateView.as_view(), name='transaction-list'),
@@ -11,4 +13,5 @@ urlpatterns = [
     path('<int:id>', TransactionDetailsView.as_view(), name='transaction-details'),
     path('<int:id>/edit/', TransactionEditView.as_view(), name='transaction-edit'),
     path('<int:id>/delete/', DeleteTransactionView.as_view(), name='transaction-delete'),
+    path('add/', AddTransactionView.as_view(), name='transaction-add'),
 ]
