@@ -9,6 +9,8 @@ from django.contrib.auth.views import LoginView
 from .forms import CustomRegisterForm, CustomLoginForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from transactions.models import Transaction
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -46,7 +48,19 @@ class ApiProfileView(APIView):
 class HomeView(LoginRequiredMixin, View):
 
     def get(self, request):
-        return render(request, 'core/index.html')
+        
+        balance = (
+            Transaction.objects.filter(user=request.user).aggregate(total=Sum('amount'))['total'] or 0.0
+        )
+
+        transactions = (
+            Transaction.objects.filter(user=request.user).order_by('-date')[:5]
+        )
+
+        return render(request, 'core/index.html',{
+            'balance':balance,
+            'transactions':transactions
+        })
     
 class CustomLoginView(LoginView):
     template_name = 'core/login.html'

@@ -24,6 +24,10 @@
       <div class="card-body">
         <h5 class="card-title">Recent Transactions</h5>
         {% if transactions %}
+        <div class="list-group-item bg-transparent text-light d-flex justify-content-between fw-bold border-bottom mb-2">
+          <span>Title</span>
+          <span>Amount</span>
+        </div>  
         <ul class="list-group list-group-flush">
           {% for transaction in transactions %}
           <li class="list-group-item bg-transparent text-light d-flex justify-content-between">
@@ -35,7 +39,7 @@
         {% else %}
         <p class="text-muted">No transactions yet.</p>
         {% endif %}
-        <a href="" class="btn btn-outline-light mt-3">View All</a>
+        <a href="{% url 'transactions-list' %}" class="btn btn-outline-light mt-3">View All</a>
       </div>
     </div>
   </div>
@@ -43,7 +47,7 @@
 
 <!-- Quick Actions -->
 <div class="mt-5 text-center">
-  <a href="" class="btn btn-primary me-2">Add Transaction</a>
+  <a href="{% url 'transaction-add' %}" class="btn btn-primary me-2">Add Transaction</a>
   <a href="" class="btn btn-outline-light">Sync with Bank</a>
 </div>
 
