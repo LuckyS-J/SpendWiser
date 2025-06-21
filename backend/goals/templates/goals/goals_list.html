@@ -12,7 +12,7 @@
   </div>
 
   <div class="mb-3 text-end">
-    <a href="" class="btn btn-primary">Add New Goal</a>
+    <a href="{% url 'goal-add' %}" class="btn btn-primary">Add New Goal</a>
   </div>
 
   {% if goals %}
@@ -49,7 +49,7 @@
           </div>
           <div class="d-flex gap-2 flex-wrap">
             <button type="button" class="btn btn-sm btn-primary flex-grow-1">Add Progress</button>
-            <form method="post" style="flex-grow: 1;">
+            <form method="post" style="flex-grow: 1;" action="{% url 'goal-delete' goal.id %}">
               {% csrf_token %}
               <button type="submit" class="btn btn-sm btn-danger w-100"
                 onclick="return confirm('Are you sure you want to delete this goal?');">Delete</button>
@@ -63,7 +63,7 @@
   {% endfor %}
   {% else %}
   <p class="text-center mt-4">
-    You don't have any goals yet. Start by <a href="">Adding your first goal</a>!
+    You don't have any goals yet!
   </p>
   {% endif %}
 </div>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import GoalForm
 from .models import Goal
@@ -11,8 +11,8 @@ class AllGoalsView(View):
         
         goals = Goal.objects.filter(user=request.user)
         goals.order_by('-created_at')
-        completed_count = [g for g in goals if g.is_completed]
-        in_progress_count = [g for g in goals if not g.is_completed]
+        completed_count = sum(1 for g in goals if g.is_completed)
+        in_progress_count = sum(1 for g in goals if not g.is_completed)
 
         return render(request, 'goals/goals_list.html', {
           'goals':goals,
@@ -34,5 +34,11 @@ class AddGoalView(View):
             goal = form.save(commit=False)
             goal.user = request.user
             goal.save()
-            return redirect('home-page')
+            return redirect('goals-list')
         return render(request, 'goals/add_goal.html', {'form': form})
+
+class DeleteGoalView(View):
+    def post(self, request, id):
+        goal = get_object_or_404(Goal, user=request.user, id=id)
+        goal.delete()
+        return redirect('goals-list')
