@@ -16,3 +16,10 @@ class Goal(models.Model):
   @property
   def is_completed(self):
     return self.current >= self.target
+  
+  @property
+  def progress_percent(self):
+    if self.target == 0:
+        return 0
+    percent = (self.current / self.target) * 100
+    return min(max(percent, 0), 100)
