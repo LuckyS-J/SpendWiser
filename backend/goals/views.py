@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .forms import GoalForm
+from .forms import GoalForm, ProgressForm
 from .models import Goal
 
 # Create your views here.
@@ -42,3 +42,19 @@ class DeleteGoalView(View):
         goal = get_object_or_404(Goal, user=request.user, id=id)
         goal.delete()
         return redirect('goals-list')
+    
+class AddProgressView(View):
+    def get(self, request, id):
+        goal = get_object_or_404(Goal, user=request.user, id=id)
+        form = ProgressForm(goal=goal)
+        return render(request, 'goals/add_progress.html', {'form':form})
+    
+    def post(self, request, id):
+        goal = get_object_or_404(Goal, user=request.user, id=id)
+        form = ProgressForm(request.POST, goal=goal)
+        if form.is_valid():
+            progress = form.cleaned_data['progress']
+            goal.current += progress
+            goal.save()
+            return redirect('goals-list')
+        return render(request, 'goals/add_progress.html', {'form': form})

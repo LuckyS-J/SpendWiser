@@ -48,7 +48,7 @@
             </div>
           </div>
           <div class="d-flex gap-2 flex-wrap">
-            <button type="button" class="btn btn-sm btn-primary flex-grow-1">Add Progress</button>
+            <a href="{% url 'goal-add-progress' goal.id %}" class="btn btn-sm btn-primary flex-grow-1">Add Progress</a>
             <form method="post" style="flex-grow: 1;" action="{% url 'goal-delete' goal.id %}">
               {% csrf_token %}
               <button type="submit" class="btn btn-sm btn-danger w-100"
