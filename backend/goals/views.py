@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import GoalForm, ProgressForm
 from .models import Goal
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
 
-class AllGoalsView(View):
+class AllGoalsView(LoginRequiredMixin, View):
     def get(self, request):
         
         goals = Goal.objects.filter(user=request.user)
@@ -21,7 +22,7 @@ class AllGoalsView(View):
          }
         )
 
-class AddGoalView(View):
+class AddGoalView(LoginRequiredMixin, View):
     def get(self, request):
 
         form = GoalForm()
@@ -37,13 +38,13 @@ class AddGoalView(View):
             return redirect('goals-list')
         return render(request, 'goals/add_goal.html', {'form': form})
 
-class DeleteGoalView(View):
+class DeleteGoalView(LoginRequiredMixin, View):
     def post(self, request, id):
         goal = get_object_or_404(Goal, user=request.user, id=id)
         goal.delete()
         return redirect('goals-list')
     
-class AddProgressView(View):
+class AddProgressView(LoginRequiredMixin, View):
     def get(self, request, id):
         goal = get_object_or_404(Goal, user=request.user, id=id)
         form = ProgressForm(goal=goal)

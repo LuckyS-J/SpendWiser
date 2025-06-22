@@ -6,7 +6,10 @@ class CustomLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs.update({
+                'class': 'form-control',
+                'style': 'background-color: #122130; color: #e0e6f0; border: 1px solid #2c3e50;',
+            })
     
 
 class CustomRegisterForm(UserCreationForm):
@@ -17,7 +20,10 @@ class CustomRegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs.update({
+                'class': 'form-control',
+                'style': 'background-color: #122130; color: #e0e6f0; border: 1px solid #2c3e50;',
+            })
 
 class SyncCSVForm(forms.Form):
     file = forms.FileField(

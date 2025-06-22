@@ -82,7 +82,8 @@ class CustomRegisterView(CreateView):
     success_url = reverse_lazy('login')
 
 
-class SyncView(View):
+class SyncView(LoginRequiredMixin, View):
+    
     def get(self, request):
         form = SyncCSVForm()
         return render(request, 'core/sync.html', {'form': form})

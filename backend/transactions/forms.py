@@ -1,4 +1,4 @@
-from django.forms import ModelForm, DateInput, ValidationError
+from django.forms import ModelForm, DateInput, ValidationError, TextInput, NumberInput, Select
 from .models import Transaction
 import datetime
 from .utils import assign_category
@@ -9,7 +9,10 @@ class TransactionForm(ModelForm):
         model = Transaction
         fields = ['title', 'amount', 'date', 'category']
         widgets = {
-            'date': DateInput(attrs={'type': 'date'})
+            'date': DateInput(attrs={'type': 'date', 'class': 'w-100'}),
+            'title': TextInput(attrs={'class': 'w-100'}),
+            'amount': NumberInput(attrs={'class': 'w-100'}),
+            'category': Select(attrs={'class': 'w-100'}),
         }
 
     def __init__(self, *args, **kwargs):

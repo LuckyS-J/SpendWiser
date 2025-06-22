@@ -14,6 +14,7 @@ from django.db.models import Sum
 from django.db.models.functions import TruncWeek
 from datetime import timedelta
 from .utils import CATEGORY_KEYWORDS
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
@@ -122,7 +123,10 @@ class ImportTransactionView(APIView):
             return Response({'Message': 'File not found'}, status=404)
 
 
-class TransactionListView(View):
+# --------------------------------------------------
+
+
+class TransactionListView(LoginRequiredMixin, View):
     def get(self, request):
 
         transactions = Transaction.objects.filter(user=request.user)
@@ -148,7 +152,7 @@ class TransactionListView(View):
         })
 
 
-class TransactionDetailsView(View):
+class TransactionDetailsView(LoginRequiredMixin, View):
 
     def get(self, request, id):
         transaction = get_object_or_404(Transaction, id=id, user=request.user)
@@ -158,7 +162,7 @@ class TransactionDetailsView(View):
         })
 
 
-class TransactionEditView(View):
+class TransactionEditView(LoginRequiredMixin, View):
     def get(self, request, id):
         transaction = get_object_or_404(Transaction, id=id, user=request.user)
         form = TransactionForm(instance=transaction)
@@ -180,14 +184,14 @@ class TransactionEditView(View):
         })
 
 
-class DeleteTransactionView(View):
+class DeleteTransactionView(LoginRequiredMixin, View):
     def post(self, request, id):
         transaction = get_object_or_404(Transaction, id=id, user=request.user)
         transaction.delete()
         return redirect('transactions-list')
 
 
-class AddTransactionView(View):
+class AddTransactionView(LoginRequiredMixin, View):
     def get(self, request):
         form = TransactionForm()
         return render(request, 'transactions/transaction_edit.html', {
@@ -203,7 +207,7 @@ class AddTransactionView(View):
             return redirect('transactions-list')
         return render(request, 'transactions/transaction_edit.html', {'form': form})
 
-class ChartsView(View):
+class ChartsView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
 
