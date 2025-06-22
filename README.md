@@ -32,6 +32,63 @@
 - **Containerization**: Docker, docker-compose
 - **Others**: dotenv for environment management, CSV parser
 
+---
+
+## 📚 API Endpoints Documentation
+
+### 🔐 Authentication & User
+
+- `POST /api/register/`  
+  **Register a new user account.**  
+  Requires user details like email and password.
+
+- `POST /api/token/`  
+  **Obtain JWT tokens (access & refresh).**  
+  Requires valid login credentials (email and password).
+
+- `POST /api/token/refresh/`  
+  **Refresh JWT access token using a refresh token.**  
+  Requires a valid refresh token.
+
+- `GET /api/profile/`  
+  **Retrieve the profile data of the currently authenticated user.**  
+  Authorization required.
+
+- `PUT /api/profile/`  
+  **Update the profile data of the authenticated user.**  
+  Allows changing fields such as email, username.  
+  Authorization required.
+
+<br>
+
+### 💸 Transactions
+
+- `GET /transactions/api/`  
+  **List all user transactions.**  
+
+- `POST /transactions/api/`  
+  **Create a new transaction.**  
+
+- `PUT /transactions/api/<id>/`  
+  **Edit details of a specific transaction by ID.**  
+
+- `GET /transactions/api/<id>/`  
+  **Retrieve details of a specific transaction by ID.**
+
+- `DELETE /transactions/api/<id>/`  
+  **Delete a specific transaction by ID.**
+
+- `GET /transactions/api/import/`  
+  **Import sample transactions from a CSV file.**  
+  Loads data from `backend/data/sample_transactions.csv`.  
+  Make sure the file exists and the name matches the one used in `ImportTransactionView`.
+
+<br>
+
+> 🛠️ **Note:** All endpoints requiring authentication must include a valid JWT access token in the `Authorization` header:
+> ```
+> Authorization: Bearer <your_access_token>
+> ```
 
 ---
 
