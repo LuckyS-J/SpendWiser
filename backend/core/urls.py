@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import ApiRegisterView, ApiProfileView, HomeView, CustomLoginView, CustomRegisterView
+from .views import ApiRegisterView, ApiProfileView, HomeView, CustomLoginView, CustomRegisterView, SyncView
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('register/', CustomRegisterView.as_view(), name='register'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('sync/', SyncView.as_view(), name='sync'),
 ]

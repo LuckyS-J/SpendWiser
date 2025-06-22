@@ -13,6 +13,13 @@
 
   <!-- Custom dark CSS -->
   <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+  <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}">
+  <link rel="shortcut icon" href="{% static 'favicon/favicon.ico' %}" type="image/x-icon">
+  
 </head>
 
 <body class="bg-dark text-light min-vh-100 d-flex flex-column">
@@ -27,8 +34,9 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="{% url 'home-page' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'transactions-charts' %}">Dashboard</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'transactions-list' %}">Transactions</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'goals-list' %}">Goals</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'transactions-charts' %}">Dashboard</a></li>
           {% if user.is_authenticated %}
             <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none;">
               {% csrf_token %}
